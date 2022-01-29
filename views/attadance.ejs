@@ -1,8 +1,11 @@
-<form action="/attendance" method="post">
-    <button type="submit"> submit</button>
+<%- include("./layout/main_layouts.ejs") -%>
+<h1 class="text-center">Please Give Your Attendence</h1>
+
+<form action="/attendance" method="post" class="text-center">
+    <button type="submit" class="btn btn-success"> submit</button>
 </form>
 
 
-<form action="/viewall" method="get">
-    <button type="submit"> view all</button>
+<form class="text-center m-5" action="/viewall" method="get">
+    <button type="submit" class="btn btn-warning"> view all</button>
 </form>

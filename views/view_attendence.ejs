@@ -2,10 +2,11 @@
 <table class="table">
     <thead>
       <tr>
-        <th scope="col-4">First</th>
-        <th scope="col-4">Last</th>
-        <th scope="col-4">Handle</th>
-        <th scope="col-4">name</th>
+        <th scope="col-4">Name</th>
+        <th scope="col-4">Email</th>
+        <th scope="col-4">Date</th>
+        <th scope="col-4">Time</th>
+        <th scope="col-4">Present</th>
       </tr>
     </thead>
     <tbody>
@@ -14,16 +15,19 @@
                 <tr>
 
                 <td>
-                    <%= Attendance.email %>
+                    <%= Attendance.name %>
                 </td>
                 <td>
-                    <%= Attendance.name %>
+                    <%= Attendance.email %>
                 </td>
                 <td>
                     <%= Attendance.day %>
                 </td>
                 <td>
                     <%= Attendance.time %>
+                </td>
+                <td>
+                    <%= Attendance.isPresent %>
                 </td>
             </tr>
                 <% }) %>

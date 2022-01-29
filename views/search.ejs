@@ -1,35 +1,53 @@
 <%- include('./layout/main_layouts.ejs') -%>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col-4">First</th>
-                <th scope="col-4">Last</th>
-                <th scope="col-4">Handle</th>
-                <th scope="col-4">name</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% if(search !='' ) { %>
-                <% search.forEach(function(search){ %>
-                    <tr>
+<head>
 
-                        <td>
-                            <%= search.email %>
-                        </td>
-                        <td>
-                            <%= search.name %>
-                        </td>
-                        <td>
-                            <%= search.day %>
-                        </td>
-                        <td>
-                            <%= search.time %>
-                        </td>
-                    </tr>
-                    <% }) %>
-            <% } else { %>
-                <p>No items found.</p>
-              <% } %>
+    <link rel="stylesheet" href="css/mobiscroll.javascript.min.css">
+    <script src="js/mobiscroll.javascript.min.js"></script>
+</head>
+<body>
+    
+<table class="table">
+<thead>
+<tr>
+    <th scope="col-4">Name</th>
+    <th scope="col-4">Email</th>
+    <th scope="col-4">Date</th>
+    <th scope="col-4">Time</th>
+</tr>
+</thead>
+<tbody>
+<% if(search !='' ) { %>
+    <% search.forEach(function(search){ %>
+        <tr>
+            
+            <td>
+                <%= search.name %>
+            </td>
+            <td>
+                <%= search.email %>
+            </td>
+            <td>
+                <%= search.day %>
+            </td>
+            <td>
+                <%= search.time %>
+            </td>
+        </tr>
+        <% }) %>
+        <% } else { %>
+            <p>No items found.</p>
+            <% } %>
+            
+        </table>
+    </table>
+    <script>
 
-    </table>
-    </table>
+        mobiscroll.datepicker('#demo-date-month', {
+            controls: ['calendar'],           // More info about controls: https://docs.mobiscroll.com/5-13-5/javascript/calendar#opt-controls
+            dateFormat: 'D MMMM YYYY',        // More info about dateFormat: https://docs.mobiscroll.com/5-13-5/javascript/calendar#localization-dateFormat
+            onInit: function (event, inst) {  // More info about onInit: https://docs.mobiscroll.com/5-13-5/javascript/calendar#event-onInit
+                inst.setVal(day, true);
+            }
+        });
+        </script>
+</body>

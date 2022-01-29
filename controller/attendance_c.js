@@ -15,7 +15,6 @@ exports.getregistration= async(req,res,next)=>{
 }
 exports.postregistration = async (req,res,next)=>{
     try {
-        console.log(req.body);
         const password = req.body.psw
         const Cpassword = req.body.cpsw
         if(password===Cpassword){
@@ -37,7 +36,6 @@ exports.postregistration = async (req,res,next)=>{
             };
             const authtoken = jwt.sign(data,JWTSECRATE)
             ls.set("token",authtoken)
-            console.log("authtoken:"+ authtoken);
     
             await nweRegister.save()
             res.render("main.ejs")
@@ -51,17 +49,14 @@ exports.getlogin =async(req,res,next)=>{
     res.render("login.ejs")
 }
 exports.postlogin  = async(req,res,next)=>{
-    console.log(req.body);
     const email= req.body.email
     const password = req.body.password
 
     const user = await employeesregister.findOne({email})
-    console.log("xyz: " +user)
     if(user == null){
-        console.log("invalid user")
+        res.send({"Msg" : "Invalid user"})
     }
     const comparepassword = await bcript.compare(password,user.password)
-    console.log("comparepassword: "+ comparepassword);
     if(comparepassword===true){
     const useremail={
         user:{
@@ -70,12 +65,11 @@ exports.postlogin  = async(req,res,next)=>{
     }
     const generatetoken = jwt.sign(useremail,JWTSECRATE)
     ls.set("token",generatetoken)
-    console.log("generatedtoken: "+ generatetoken);
     res.render('attadance.ejs');
+    
 }
     else{
         res.json({msg: " invalid user"})
-        console.log("Invalid password");
     }
 }
 exports.attendanceonpost = async(req,res,next)=>{
@@ -84,28 +78,37 @@ exports.attendanceonpost = async(req,res,next)=>{
         const jwtchecking = ls.get("token")
         if(!jwtchecking){
             return res.send({"msg":"you need to be login"})
-            // console.log("jwtchecking: " + jwtchecking);
         }
         const verifiedemail = verifyUser(jwtchecking)
-        const employename = await employeesregister.find({email:verifiedemail})
+        const employename = await employeesregister.find({email: verifiedemail})
         let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const d = new Date()
-        const date = d.getDay()+months[d.getMonth()]+""+d.getFullYear
-        const time = d.getHours()+":"+d.getMinutes()+":"+d.getSeconds
-
-        const employeAttadance= new Attendance({
-            name:employename[0].fname +" "+ employename[0].lname,
-            day: date,
-            time:time,
-            email: verifiedemail,
-            isPresent:true
-        })
-        await employeAttadance.save()
+        const date = months[d.getMonth()]+d.getDate()+","+ d.getFullYear()
         
+        const time = d.getHours() +":"+ d.getMinutes() +":"+ d.getSeconds()
+        // const attadance = await Attendance.find({
+            //     day: date,
+            //     month: months[month],
+            //     year: year,
+            //     email: verifiedemail,
+            //     isPresent:true})
+            //     if(attadance){
+                //         return res.send({"Msg": "you have allready login"}) 
+                //     }
+                const employeAttadance= new Attendance({
+                    name:employename[0].fname +" "+ employename[0].lname,
+                    day: date,
+                    time:time,
+                    email: verifiedemail,
+                    isPresent:true
+                })
+                await employeAttadance.save()
+                res.render("attadance.ejs")
+                
+            
         } catch (error) {
             console.log(error);
-        }}    
-        
+        }}         
 exports.viewattendence = async(req,res,next)=>{
     try {
         const employees = await Attendance.find({})
@@ -121,8 +124,6 @@ exports.searchemploye= async (req,res,next)=>{
     try {
         let searchTerm =req.body.searchTerm
         let search = await Attendance.find({name:searchTerm})
-        console.log(searchTerm)
-        console.log(search)
         res.render("search.ejs", {search} );
         
     } catch (error) {
