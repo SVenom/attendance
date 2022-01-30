@@ -1,21 +1,23 @@
 const mongoose =  require("mongoose")
 
 const ExploreNewSchema = new mongoose.Schema({
-    day:{
-        type:String,
-        required:true
-    },
-    month:{
-        type:String,
-        required:true
-    },
-    year:{
+    name:{
         type:String,
         required:true
     },
     email:{
         type:String,
+        required:true,
+        unique:false
+    },
+    day:{
+        type:String,
         required:true
+    },
+    time:{
+        type:String,
+        required:true
+
     },
     isPresent:{
         type:String,

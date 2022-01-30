@@ -5,20 +5,14 @@ const jwt = require('jsonwebtoken');
 const ls = require('local-storage');
 const bcript= require('bcryptjs');
 const verifyUser = require("../verify")
-const res = require("express/lib/response");
-const req = require('express/lib/request');
-const { find } = require('../model/registraion');
 
 
 const JWTSECRATE = "##Hello My New User@@"
 
 
-
-
 exports.getregistration= async(req,res,next)=>{
     res.render("registration.ejs") 
 }
-
 exports.postregistration = async (req,res,next)=>{
     try {
         console.log(req.body);
@@ -84,36 +78,42 @@ exports.postlogin  = async(req,res,next)=>{
         console.log("Invalid password");
     }
 }
-
 exports.attendanceonpost = async(req,res,next)=>{
-    const jwtchecking = ls.get("token")
-    if(!jwtchecking){
-        return res.send({"msg":"you need to be login"})
-        // console.log("jwtchecking: " + jwtchecking);
-    }
-    const verifiedemail = verifyUser(jwtchecking)
-    let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const d = new Date()
-    const date =d.getDate()
-    const month = d.getMonth()
-    const year = d.getFullYear()
-    const attadance = await Attendance.find({
-        day: date,
-        month: months[month],
-        year: year,
-        email: verifiedemail,
-        isPresent:true})
-        if(attadance){
-            return res.send({"Msg": "you have allready login"}) 
+    try {
+        
+        const jwtchecking = ls.get("token")
+        if(!jwtchecking){
+            return res.send({"msg":"you need to be login"})
+            // console.log("jwtchecking: " + jwtchecking);
         }
-    const employeAttadance= new Attendance({
-        day: date,
-        month: months[month],
-        year: year,
-        email: verifiedemail,
-        isPresent:true
-    })
-    await employeAttadance.save()
-    res.render("attadance.ejs")
-        // console.log("useremail: " + verifiedemail);
+        const verifiedemail = verifyUser(jwtchecking)
+        const employename = await employeesregister.find({email:verifiedemail})
+        let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const d = new Date()
+        const date = d.getDay()+months[d.getMonth()]+""+d.getFullYear
+        const time = d.getHours()+":"+d.getMinutes()+":"+d.getSeconds
+
+        const employeAttadance= new Attendance({
+            name:employename[0].fname +" "+ employename[0].lname,
+            day: date,
+            time:time,
+            email: verifiedemail,
+            isPresent:true
+        })
+        await employeAttadance.save()
+        
+        } catch (error) {
+            console.log(error);
+        }}    
+        
+exports.viewattendence = async(req,res,next)=>{
+    try {
+        const employees = await Attendance.find({})
+        console.log(employees);
+        res.render("view_attendence.ejs",{employees})
+        
+        
+    } catch (error) {
+        console.log(error);
+    }
 }

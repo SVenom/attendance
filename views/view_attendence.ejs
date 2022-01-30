@@ -1,0 +1,33 @@
+<%- include('./layout/main_layouts.ejs') -%> 
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col-4">First</th>
+        <th scope="col-4">Last</th>
+        <th scope="col-4">Handle</th>
+        <th scope="col-4">name</th>
+      </tr>
+    </thead>
+    <tbody>
+        <% if(typeof employees !=='undefined' && employees.length> 0) { %>
+            <% employees.forEach(function(Attendance){ %>
+                <tr>
+
+                <td>
+                    <%= Attendance.email %>
+                </td>
+                <td>
+                    <%= Attendance.name %>
+                </td>
+                <td>
+                    <%= Attendance.day %>
+                </td>
+                <td>
+                    <%= Attendance.time %>
+                </td>
+            </tr>
+                <% }) %>
+        <% } %>
+    
+    </table>
+  </table>
