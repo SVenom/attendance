@@ -8,6 +8,7 @@ router.post('/login',attendanceontroller.postlogin)
 router.get('/login', attendanceontroller.getlogin);
 router.post('/attendance',attendanceontroller.attendanceonpost)
 router.get('/viewall',attendanceontroller.viewattendence)
+router.post('/search',attendanceontroller.searchemploye)
 
 
 

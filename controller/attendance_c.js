@@ -117,3 +117,16 @@ exports.viewattendence = async(req,res,next)=>{
         console.log(error);
     }
 }
+exports.searchemploye= async (req,res,next)=>{
+    try {
+        let searchTerm =req.body.searchTerm
+        let search = await Attendance.find({name:searchTerm})
+        console.log(searchTerm)
+        console.log(search)
+        res.render("search.ejs", {search} );
+        
+    } catch (error) {
+        
+    }
+        
+}
