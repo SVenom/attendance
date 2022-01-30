@@ -14,9 +14,12 @@ const JWTSECRATE = "##Hello My New User@@"
             return i+1
     }
  }
+
+//*Show Register Page
 exports.getregistration= async(req,res,next)=>{
     res.render("registration.ejs") 
 }
+//*Empoye Register
 exports.postregistration = async (req,res,next)=>{
     try {
         const password = req.body.psw
@@ -42,19 +45,20 @@ exports.postregistration = async (req,res,next)=>{
             ls.set("token",authtoken)
     
             await nweRegister.save()
-            res.render("main.ejs")
+            return res.send({"Msg" : "You Registered Successfully!"})
         }
     } catch (error) {
         console.log(error);
         
     }
 }
+//*show login page
 exports.getlogin =async(req,res,next)=>{
     res.render("login.ejs")
 }
-exports.postlogin  = async(req,res,next)=>{
 
-    
+//*Login Valid Employe 
+exports.postlogin  = async(req,res,next)=>{
 
     const email= req.body.email
     const password = req.body.password
@@ -82,6 +86,8 @@ exports.postlogin  = async(req,res,next)=>{
         res.json({msg: " invalid user"})
     }
 }
+
+//*Store Attendance
 exports.attendanceonpost = async(req,res,next)=>{
     try {
         
@@ -120,7 +126,9 @@ exports.attendanceonpost = async(req,res,next)=>{
         } catch (error) {
             console.log(error);
 }
-}         
+}
+
+// *See Attendance(Only Admin) & Give Attendance(Only Employe)
 exports.viewattendence = async(req,res,next)=>{
     try {
         const jwtchecking = ls.get("token")
@@ -130,7 +138,6 @@ exports.viewattendence = async(req,res,next)=>{
     const verifiedemail = verifyUser(jwtchecking)
     const employename = await employeesregister.find({email: verifiedemail})
     const employees = await Attendance.find({})
-    console.log(employees);
     res.render("view_attendence.ejs",{employees})
     
     
@@ -138,12 +145,16 @@ exports.viewattendence = async(req,res,next)=>{
         console.log(error);
     }
 }
+
+//*Search Employe
 exports.searchemploye= async (req,res,next)=>{
-        let searchTerm =req.body.searchTerm
-        let search = await Attendance.find({name:searchTerm})
+        const searchTerm =req.body.searchTerm
+        const search = await Attendance.find({name:searchTerm})
         res.render("search.ejs", {search} );
         
 }
+
+//*Show Calender
 exports.showcalender= async(req,res,next)=>{
     const token = ls.get("token")
     if(!token){
@@ -164,9 +175,9 @@ exports.showcalender= async(req,res,next)=>{
         attendate+=thedate
         attendate+=" "
     }
-    console.log(attendate);
-const d = new Date()
-const today = d.getDate()
-const noOfPresentday=attendanceemploye.length
-    res.render("check.ejs",{attendanceemploye,attendate,today,noOfPresentday})
+    const d = new Date()
+    const today = d.getDate()
+    const noOfPresentday=attendanceemploye.length
+    const AbsentDays = today-noOfPresentday
+    res.render("check.ejs",{attendanceemploye,attendate,today,noOfPresentday,AbsentDays})
 }
