@@ -7,8 +7,12 @@
 <% } %> 
 
 <% if(isAdmin){ %> 
-    <h1 class="text-center">See All Employe Attendance</h1>
+    <h1 class="text-center">See All Employe</h1>
 <form class="text-center m-5" action="/viewall" method="get">
-    <button type="submit" class="btn btn-warning"> view all</button>
+    <button type="submit" class="btn btn-warning">View All</button>
+</form>
+    <h1 class="text-center">See All Employe Attendance</h1>
+<form class="text-center m-5" action="/viewallattendance" method="get">
+    <button type="submit" class="btn btn-warning">ViewAll Attendance</button>
 </form>
 <% } %> 
