@@ -60,7 +60,6 @@ exports.postlogin  = async(req,res,next)=>{
     const password = req.body.password
 
     const user = await employeesregister.findOne({email})
-    console.log(user);
     if(user===null){
         return res.send({"Msg" : "Invalid user"})
     }
