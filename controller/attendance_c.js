@@ -5,6 +5,9 @@ const jwt = require('jsonwebtoken');
 const ls = require('local-storage');
 const bcript= require('bcryptjs');
 const verifyUser = require("../verify");
+const moment = require("moment")
+
+
 const JWTSECRATE = "##Hello My New User@@"
 
  const getmonthnumber=(month)=>{
@@ -14,7 +17,6 @@ const JWTSECRATE = "##Hello My New User@@"
             return i+1
     }
  }
- 
 //*Show Register Page
 exports.getregistration= async(req,res,next)=>{
     res.render("registration.ejs") 
@@ -193,9 +195,9 @@ exports.showcalender= async(req,res,next)=>{
         attendate+=thedate
         attendate+=" "
     }
+    const daysinmonth = moment().daysInMonth()
     const d = new Date()
-    const today = d.getDate()
-    const noOfPresentday=attendanceemploye.length
-    const AbsentDays = today-noOfPresentday
-    res.render("check.ejs",{title: 'View Attendance',attendanceemploye,attendate,today,noOfPresentday,AbsentDays})
+    const noOfPresentday=d.getDate()
+    const AbsentDays = daysinmonth-noOfPresentday
+    res.render("check.ejs",{title: 'View Attendance',attendanceemploye,attendate,daysinmonth,noOfPresentday,AbsentDays})
 }
