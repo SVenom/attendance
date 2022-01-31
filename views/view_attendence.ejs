@@ -7,7 +7,8 @@
         <th scope="col-4">Date</th>
         <th scope="col-4">Time</th>
         <th scope="col-4">Present</th>
-      </tr>
+        <th scope="col-4">View Attendence</th>
+    </tr>
     </thead>
     <tbody>
         <% if(typeof employees !=='undefined' && employees.length> 0) { %>
@@ -29,9 +30,13 @@
                 <td>
                     <%= Attendance.isPresent %>
                 </td>
+                <td>
+                    <a href="/calender/<%= Attendance.email %> ">View Attendence</a>
+                </td>
             </tr>
                 <% }) %>
         <% } %>
+        <td></td>
     
     </table>
   </table>

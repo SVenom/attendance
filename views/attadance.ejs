@@ -5,7 +5,8 @@
     <button type="submit" class="btn btn-success"> submit</button>
 </form>
 
-
+<% if(isAdmin){ %> 
 <form class="text-center m-5" action="/viewall" method="get">
     <button type="submit" class="btn btn-warning"> view all</button>
 </form>
+<% } %> 

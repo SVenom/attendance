@@ -9,6 +9,7 @@ router.get('/login', attendanceontroller.getlogin);
 router.post('/attendance',attendanceontroller.attendanceonpost)
 router.get('/viewall',attendanceontroller.viewattendence)
 router.post('/search',attendanceontroller.searchemploye)
+router.get('/calender/:email',attendanceontroller.showcalender)
 
 
 

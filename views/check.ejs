@@ -1,1 +1,66 @@
-<h1>hiii</h1>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/smoothness/jquery-ui.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+        <style>
+            body{
+                font-family:Arial;
+                font-size : 10pt;
+                padding:5px;
+            }
+            
+            .Highlighted a{
+                background-color : Green !important;
+                background-image :none !important;
+                color: White !important;
+                font-weight:bold !important;
+                font-size: 12pt;
+            }
+            </style>
+</head>
+<body>
+    
+    <h1><%= attendanceemploye[0].name %> </h1>
+    <input type='text' id='txtDate' value="<%= attendate %>" />
+
+    <script>
+         let filter = document.getElementById("txtDate").value;
+        let dates = filter.split(' ')
+        console.log(filter)
+    </script>
+
+
+
+
+
+
+  
+    <script>
+
+        $(document).ready(function() {
+            var SelectedDates = {};
+            for(let i = 0; i<dates.length;i++){
+                console.log(dates[i])
+                SelectedDates[new Date(dates[i])] = new Date(dates[i]);
+            }
+            $('#txtDate').datepicker({
+                beforeShowDay: function(date) {
+                    var Highlight = SelectedDates[date];
+                    if (Highlight) {
+                        return [true, "Highlighted", Highlight];
+                    }
+                    else {
+                        return [true, '', ''];
+                    }
+                }
+            });
+        });
+        </script>
+</body>
+</html>

@@ -4,12 +4,16 @@ const Attendance = require('../model/attendence')
 const jwt = require('jsonwebtoken');
 const ls = require('local-storage');
 const bcript= require('bcryptjs');
-const verifyUser = require("../verify")
-
-
+const verifyUser = require("../verify");
 const JWTSECRATE = "##Hello My New User@@"
 
-
+ const getmonthnumber=(month)=>{
+    let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    for(let i=0;i<12;i++){
+        if(months[i]===month)
+            return i+1
+    }
+ }
 exports.getregistration= async(req,res,next)=>{
     res.render("registration.ejs") 
 }
@@ -49,6 +53,9 @@ exports.getlogin =async(req,res,next)=>{
     res.render("login.ejs")
 }
 exports.postlogin  = async(req,res,next)=>{
+
+    
+
     const email= req.body.email
     const password = req.body.password
 
@@ -65,7 +72,7 @@ exports.postlogin  = async(req,res,next)=>{
     }
     const generatetoken = jwt.sign(useremail,JWTSECRATE)
     ls.set("token",generatetoken)
-    res.render('attadance.ejs');
+    res.render('attadance.ejs',{isAdmin:user.isAdmin});
     
 }
     else{
@@ -83,7 +90,7 @@ exports.attendanceonpost = async(req,res,next)=>{
         const employename = await employeesregister.find({email: verifiedemail})
         let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const d = new Date()
-        const date = months[d.getMonth()]+d.getDate()+","+ d.getFullYear()
+        const date = d.getDate()+" "+months[d.getMonth()]+" "+ d.getFullYear()
         
         const time = d.getHours() +":"+ d.getMinutes() +":"+ d.getSeconds()
         // const attadance = await Attendance.find({
@@ -103,31 +110,56 @@ exports.attendanceonpost = async(req,res,next)=>{
                     isPresent:true
                 })
                 await employeAttadance.save()
-                res.render("attadance.ejs")
+                res.render("attadance.ejs",{isAdmin:employename.isAdmin})
                 
             
         } catch (error) {
             console.log(error);
-        }}         
+}
+}         
 exports.viewattendence = async(req,res,next)=>{
     try {
-        const employees = await Attendance.find({})
-        console.log(employees);
-        res.render("view_attendence.ejs",{employees})
-        
-        
+        const jwtchecking = ls.get("token")
+    if(!jwtchecking){
+        return res.send({"msg":"you need to be login"})
+    }
+    const verifiedemail = verifyUser(jwtchecking)
+    const employename = await employeesregister.find({email: verifiedemail})
+    const employees = await Attendance.find({})
+    console.log(employees);
+    res.render("view_attendence.ejs",{employees})
+    
+    
     } catch (error) {
         console.log(error);
     }
 }
 exports.searchemploye= async (req,res,next)=>{
-    try {
         let searchTerm =req.body.searchTerm
         let search = await Attendance.find({name:searchTerm})
         res.render("search.ejs", {search} );
         
-    } catch (error) {
-        
+}
+exports.showcalender= async(req,res,next)=>{
+    const token = ls.get("token")
+    if(!token){
+        return res.send({"Msg":"You Need To Be Authorised"})
     }
-        
+    const email = verifyUser(token)
+    const user = await employeesregister.findOne({email})
+    if(!user.isAdmin){
+        return res.send({"Msg":"You Need To Be an Admin"})
+    }
+    const useremail= req.params.email
+    let attendanceemploye = await Attendance.find({email:useremail})
+    let attendate = ""
+    for(let i=0; i<attendanceemploye.length;i++){
+        let thedate =""
+        let date= attendanceemploye[i].day.split(" ")
+        thedate = getmonthnumber(date[1])+"/"+date[0]+"/"+date[2]
+        attendate+=thedate
+        attendate+=" "
+    }
+    console.log(attendate);
+    res.render("check.ejs",{attendanceemploye,attendate})
 }
