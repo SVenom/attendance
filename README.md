@@ -12,6 +12,7 @@ In Employe login section:-
 
 In ADMIN login Section:-
 1. Admin can see all the employees details clicking viewall.
+1. Admin can see all the employees Attendance and time details clicking viewall attendance.
 2. There is from layouts which show all only active employees attendance details.
 3. clicking viewattendance see only the specific user present day,Absent days & total working days of the month.
 4. clicking on the date input admin show a calender,which show the specific employe presents days different color.
