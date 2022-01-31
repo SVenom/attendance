@@ -11,6 +11,5 @@ router.get('/viewall',attendanceontroller.viewattendence)
 router.post('/search',attendanceontroller.searchemploye)
 router.get('/calender/:email',attendanceontroller.showcalender)
 
-
-
 module.exports = router;
+

@@ -60,10 +60,14 @@ exports.postlogin  = async(req,res,next)=>{
     const password = req.body.password
 
     const user = await employeesregister.findOne({email})
-    if(user == null){
-        res.send({"Msg" : "Invalid user"})
+    console.log(user);
+    if(user===null){
+        return res.send({"Msg" : "Invalid user"})
     }
     const comparepassword = await bcript.compare(password,user.password)
+    if(!comparepassword){
+        return res.send({"Msg" : "Invalid user"})
+    }
     if(comparepassword===true){
     const useremail={
         user:{
@@ -93,15 +97,16 @@ exports.attendanceonpost = async(req,res,next)=>{
         const date = d.getDate()+" "+months[d.getMonth()]+" "+ d.getFullYear()
         
         const time = d.getHours() +":"+ d.getMinutes() +":"+ d.getSeconds()
-        // const attadance = await Attendance.find({
-            //     day: date,
-            //     month: months[month],
-            //     year: year,
-            //     email: verifiedemail,
-            //     isPresent:true})
-            //     if(attadance){
-                //         return res.send({"Msg": "you have allready login"}) 
-                //     }
+        const attadance = await Attendance.find(
+            {
+                day: date,
+                email: verifiedemail,
+                isPresent:true}
+                )
+                console.log(attadance);
+                if(attadance.length){
+                        return res.send({"Msg": "you have allready login"}) 
+                    }
                 const employeAttadance= new Attendance({
                     name:employename[0].fname +" "+ employename[0].lname,
                     day: date,
@@ -161,5 +166,8 @@ exports.showcalender= async(req,res,next)=>{
         attendate+=" "
     }
     console.log(attendate);
-    res.render("check.ejs",{attendanceemploye,attendate})
+const d = new Date()
+const today = d.getDate()
+const noOfPresentday=attendanceemploye.length
+    res.render("check.ejs",{attendanceemploye,attendate,today,noOfPresentday})
 }

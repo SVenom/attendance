@@ -27,22 +27,17 @@
 <body>
     
     <h1><%= attendanceemploye[0].name %> </h1>
-    <input type='text' id='txtDate' value="<%= attendate %>" />
+    <h6>Total Working Days In this Month<%=today %> </h6>
+    <h6>Total Present Days In this Month <%= noOfPresentday %> </h6>
+    <h6>Total Absent Days In this Month</h6>
 
+
+
+    <input type='text' id='txtDate' value="<%= attendate %>" />
     <script>
          let filter = document.getElementById("txtDate").value;
         let dates = filter.split(' ')
         console.log(filter)
-    </script>
-
-
-
-
-
-
-  
-    <script>
-
         $(document).ready(function() {
             var SelectedDates = {};
             for(let i = 0; i<dates.length;i++){
