@@ -5,10 +5,9 @@ const jwt = require('jsonwebtoken');
 const ls = require('local-storage');
 const bcript= require('bcryptjs');
 const verifyUser = require("../verify");
-const moment = require("moment")
-
-
+const moment = require("moment");
 const JWTSECRATE = "##Hello My New User@@"
+let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
  const getmonthnumber=(month)=>{
     let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -188,16 +187,23 @@ exports.showcalender= async(req,res,next)=>{
     const useremail= req.params.email
     let attendanceemploye = await Attendance.find({email:useremail})
     let attendate = ""
+    let totalpresentThisMonth=0
+    const d1=new Date()
+    const thisMonth=months[d1.getMonth()]
     for(let i=0; i<attendanceemploye.length;i++){
+       
         let thedate =""
         let date= attendanceemploye[i].day.split(" ")
         thedate = getmonthnumber(date[1])+"/"+date[0]+"/"+date[2]
+        if(date[1]===thisMonth)
+            totalpresentThisMonth++
         attendate+=thedate
         attendate+=" "
     }
+    console.log("Total present in this month is ",totalpresentThisMonth)
     const daysinmonth = moment().daysInMonth()
     const d = new Date()
-    const noOfPresentday=d.getDate()
+    const noOfPresentday=totalpresentThisMonth
     const AbsentDays = daysinmonth-noOfPresentday
-    res.render("check.ejs",{title: 'View Attendance',attendanceemploye,attendate,daysinmonth,noOfPresentday,AbsentDays})
+    res.render("check.ejs",{title: 'View Attendance',attendanceemploye,attendate,daysinmonth,noOfPresentday,AbsentDays,totalpresentThisMonth})
 }
