@@ -203,7 +203,8 @@ exports.showcalender= async(req,res,next)=>{
     console.log("Total present in this month is ",totalpresentThisMonth)
     const daysinmonth = moment().daysInMonth()
     const d = new Date()
+    const today = d.getDate()
     const noOfPresentday=totalpresentThisMonth
-    const AbsentDays = daysinmonth-noOfPresentday
-    res.render("check.ejs",{title: 'View Attendance',attendanceemploye,attendate,daysinmonth,noOfPresentday,AbsentDays,totalpresentThisMonth})
+    const AbsentDays = today-noOfPresentday
+    res.render("check.ejs",{title: 'View Attendance',attendanceemploye,attendate,today,noOfPresentday,AbsentDays,totalpresentThisMonth})
 }
