@@ -19,10 +19,8 @@ let months = ["January", "February", "March", "April", "May", "June", "July", "A
  }
 //*Show Register Page
 exports.getregistration= async(req,res,next)=>{
-    // res.render("registration.ejs") 
-    res.json({"msg":"hchcwjcebh"}) 
+    res.render("registration.ejs") 
 }
-
 //*Empoye Register
 exports.postregistration = async (req,res,next)=>{
     try {
@@ -221,13 +219,13 @@ exports.showcalender= async(req,res,next)=>{
     const AbsentDays = today-noOfPresentday
     res.render("check.ejs",{title: 'View Attendance',attendanceemploye,attendate,daysinmonth,today,noOfPresentday,AbsentDays,totalpresentThisMonth})
 }
+// Thander Client
 exports.testingroute= async(req,res,next)=>{
     const month = req.body.month
     const name = req.body.name
     console.log(month);
     console.log(name);
     const search = await Attendance.find({})
-    // console.log(search)
     let abc= []
     for(let i = 0; i<search.length;i++){
         const efg  = search[i].day
