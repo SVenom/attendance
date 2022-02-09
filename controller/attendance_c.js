@@ -6,6 +6,7 @@ const ls = require('local-storage');
 const bcript= require('bcryptjs');
 const verifyUser = require("../verify");
 const moment = require("moment");
+const { name } = require('ejs');
 const JWTSECRATE = "##Hello My New User@@"
 let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -18,7 +19,8 @@ let months = ["January", "February", "March", "April", "May", "June", "July", "A
  }
 //*Show Register Page
 exports.getregistration= async(req,res,next)=>{
-    res.render("registration.ejs") 
+    // res.render("registration.ejs") 
+    res.json({"msg":"hchcwjcebh"}) 
 }
 
 //*Empoye Register
@@ -103,7 +105,6 @@ exports.attendanceonpost = async(req,res,next)=>{
         let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const d = new Date()
         const date = d.getDate()+" "+months[d.getMonth()]+" "+ d.getFullYear()
-        
         const time = d.getHours() +":"+ d.getMinutes() +":"+ d.getSeconds()
         const attadance = await Attendance.find(
             {
@@ -112,8 +113,8 @@ exports.attendanceonpost = async(req,res,next)=>{
                 isPresent:true}
                 )
                 if(attadance.length){
-                        return res.send({"Msg": "you have allready login"}) 
-                    }
+                    return res.send({"Msg": "you have allready login"}) 
+                }
                 const employeAttadance= new Attendance({
                     name:employename[0].fname +" "+ employename[0].lname,
                     day: date,
@@ -123,6 +124,8 @@ exports.attendanceonpost = async(req,res,next)=>{
                 })
                 await employeAttadance.save()
                 res.render("attadance.ejs",{isAdmin:employename.isAdmin})
+                console.log(employeAttadance)
+                console.log(date)
                 
             
         } catch (error) {
@@ -167,12 +170,22 @@ exports.viewall = async(req,res,next)=>{
 
 //*Search Employe
 exports.searchemploye= async (req,res,next)=>{
+    try {
         const searchTerm =req.body.searchTerm
-        const search = await Attendance.find({name:searchTerm})
-        res.render("search.ejs", {title: 'Search',search} );
+        const searchdate =req.body.searchdate
+        const dayarray = searchdate.split("-")
+        const date =parseInt(dayarray[2])
+        const month =months[parseInt( dayarray[1])-1]
+        const searchingdate = date +" "+month+" "+dayarray[0]
+        const searchname = await Attendance.find({$and : [{name:searchTerm},{day:searchingdate}]})
+        console.log(searchname);
+        res.render("search.ejs", {title: 'Search',searchname} );
         
-}
-
+    } catch (error) {
+        console.log(error);
+    }
+    }
+    
 //*Show Calender
 exports.showcalender= async(req,res,next)=>{
     const token = ls.get("token")
@@ -191,12 +204,12 @@ exports.showcalender= async(req,res,next)=>{
     const d1=new Date()
     const thisMonth=months[d1.getMonth()]
     for(let i=0; i<attendanceemploye.length;i++){
-       
+        
         let thedate =""
         let date= attendanceemploye[i].day.split(" ")
         thedate = getmonthnumber(date[1])+"/"+date[0]+"/"+date[2]
         if(date[1]===thisMonth)
-            totalpresentThisMonth++
+        totalpresentThisMonth++
         attendate+=thedate
         attendate+=" "
     }
@@ -206,5 +219,23 @@ exports.showcalender= async(req,res,next)=>{
     const today = d.getDate()
     const noOfPresentday=totalpresentThisMonth
     const AbsentDays = today-noOfPresentday
-    res.render("check.ejs",{title: 'View Attendance',attendanceemploye,attendate,today,noOfPresentday,AbsentDays,totalpresentThisMonth})
+    res.render("check.ejs",{title: 'View Attendance',attendanceemploye,attendate,daysinmonth,today,noOfPresentday,AbsentDays,totalpresentThisMonth})
+}
+exports.testingroute= async(req,res,next)=>{
+    const month = req.body.month
+    console.log(month);
+    const search = await Attendance.find({})
+    // console.log(search)
+    let abc= []
+    for(let i = 0; i<search.length;i++){
+        const efg  = search[i].day
+        const xyz = month
+        console.log(efg)
+        console.log(xyz)
+        if(efg.includes(xyz)){
+        abc.push(search[i])
+        }
+    }
+    console.log(abc);
+    res.json({abc})
 }
