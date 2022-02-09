@@ -223,19 +223,20 @@ exports.showcalender= async(req,res,next)=>{
 }
 exports.testingroute= async(req,res,next)=>{
     const month = req.body.month
+    const name = req.body.name
     console.log(month);
+    console.log(name);
     const search = await Attendance.find({})
     // console.log(search)
     let abc= []
     for(let i = 0; i<search.length;i++){
         const efg  = search[i].day
+        const pqr = search[i].name
         const xyz = month
-        console.log(efg)
-        console.log(xyz)
-        if(efg.includes(xyz)){
+        const ijk = name
+        if(efg.includes(xyz) & pqr.includes(ijk)){
         abc.push(search[i])
         }
     }
-    console.log(abc);
     res.json({abc})
 }
