@@ -1,18 +1,48 @@
 <%- include("./layout/main_layouts.ejs") -%>
-<% if(!isAdmin){ %> 
-    <h1 class="text-center">Please Give Your Attendence</h1>
-<form action="/attendance" method="post" class="text-center">
-    <button type="submit" class="btn btn-success"> submit</button>
-</form>
-<% } %> 
+<div id="liveAlertPlaceholder"><div class="alert alert-warning" role="alert" >
+    A simple warning alert—check it out!
+  </div></div>
+    <% if(isAdmin){ %> 
+        <div class="col-md-3 text-end float-end mx-4">
+            <form method="post" action="/search">
+                <label for="search" style="display: flex; flex-wrap: wrap;">Search
+                <input type="search" name="searchTerm" class="form-control" placeholder="Search..."
+                    aria-label="Search"></label>
+                    <label for="day" style="display:flex; flex-wrap:wrap;">Day
+                          <input type="date" name="searchdate" class="form-control"
+                        aria-label="Search" id="searchdate"></label>
+                    <input type="submit" style="visibility: hidden;" />
+            </form>
+            </div>
+        
+            <div class="d-flex flex-column bd-highlight mb-3">
 
-<% if(isAdmin){ %> 
-    <h1 class="text-center">See All Employe</h1>
-<form class="text-center m-5" action="/viewall" method="get">
-    <button type="submit" class="btn btn-warning">View All</button>
-</form>
-    <h1 class="text-center">See All Employe Attendance</h1>
-<form class="text-center m-5" action="/viewallattendance" method="get">
-    <button type="submit" class="btn btn-warning">ViewAll Attendance</button>
-</form>
-<% } %> 
+            <h1 class="text-center">See All Employe</h1>
+                    <form class="text-center m-5" action="/viewall" method="get">
+                        <button type="submit" class="btn btn-warning">View All</button>
+                    </form>
+                    <h1 class="text-center">See All Employe Attendance</h1>
+                    <form class="text-center m-5" action="/viewallattendance" method="get">
+                        <button type="submit" class="btn btn-warning">ViewAll Attendance</button>
+                    </form>
+        </div>
+        <% } %>
+        <div class="see" style="display: grid;">
+            <% if(!isAdmin){ %> 
+                <% if(!giveAttendance) {%>
+                    <h1 class="text-center">Please Give Your Attendence</h1>
+                    <form action="/attendance" onsubmit="handelsubmit()" method="post" class="text-center">
+                        <button type="submit" class="btn btn-success">submit</button>
+                    </form>                                 
+                    <% }else { %>       
+                        <h1  class="text-center">  Allready give your Attendance</h1>
+                <% } %> 
+                <% } %> 
+                </div>   
+                <script>
+                    document.getElementById("liveAlertPlaceholder").style.display="none"
+                    function handelsubmit(){
+                        document.getElementById("liveAlertPlaceholder").style.display="block"
+                    }
+                </script>
+             

@@ -47,7 +47,7 @@ exports.postregistration = async (req,res,next)=>{
             ls.set("token",authtoken)
     
             await nweRegister.save()
-            return res.send({"Msg" : "You Registered Successfully!"})
+            res.render("login.ejs")
         }
     } catch (error) {
         console.log(error);
@@ -82,7 +82,14 @@ exports.postlogin  = async(req,res,next)=>{
     }
     const generatetoken = jwt.sign(useremail,JWTSECRATE)
     ls.set("token",generatetoken)
-    res.render('attadance.ejs',{isAdmin:user.isAdmin});
+    const d = new Date()
+    const date = d.getDate()+" "+months[d.getMonth()]+" "+ d.getFullYear()
+    let giveAttendance = false
+    const employeAttendance = await Attendance.findOne({email,day:date})
+    if(employeAttendance){
+        giveAttendance= true
+    }
+    res.render('attadance.ejs',{isAdmin:user.isAdmin,giveAttendance,});
     
 }
     else{
@@ -92,8 +99,7 @@ exports.postlogin  = async(req,res,next)=>{
 
 //*Store Attendance
 exports.attendanceonpost = async(req,res,next)=>{
-    try {
-        
+    try {        
         const jwtchecking = ls.get("token")
         if(!jwtchecking){
             return res.send({"msg":"you need to be login"})
@@ -104,28 +110,17 @@ exports.attendanceonpost = async(req,res,next)=>{
         const d = new Date()
         const date = d.getDate()+" "+months[d.getMonth()]+" "+ d.getFullYear()
         const time = d.getHours() +":"+ d.getMinutes() +":"+ d.getSeconds()
-        const attadance = await Attendance.find(
-            {
-                day: date,
-                email: verifiedemail,
-                isPresent:true}
-                )
-                if(attadance.length){
-                    return res.send({"Msg": "you have allready login"}) 
-                }
-                const employeAttadance= new Attendance({
-                    name:employename[0].fname +" "+ employename[0].lname,
-                    day: date,
-                    time:time,
-                    email: verifiedemail,
-                    isPresent:true
-                })
-                await employeAttadance.save()
-                res.render("attadance.ejs",{isAdmin:employename.isAdmin})
-                console.log(employeAttadance)
-                console.log(date)
-                
-            
+        const employeAttadance= new Attendance({
+            name:employename[0].fname +" "+ employename[0].lname,
+            day: date,
+            time:time,
+            email: verifiedemail,
+            isPresent:true
+        })
+        await employeAttadance.save()
+                setTimeout(() => {
+                    res.render("attadance.ejs",{isAdmin:employename.isAdmin,giveAttendance:true})
+                }, 2000);          
         } catch (error) {
             console.log(error);
 }
