@@ -90,6 +90,7 @@ exports.postlogin  = async(req,res,next)=>{
         giveAttendance= true
     }
     res.render('attadance.ejs',{isAdmin:user.isAdmin,giveAttendance,});
+   
     
 }
     else{
@@ -118,9 +119,9 @@ exports.attendanceonpost = async(req,res,next)=>{
             isPresent:true
         })
         await employeAttadance.save()
-                setTimeout(() => {
-                    res.render("attadance.ejs",{isAdmin:employename.isAdmin,giveAttendance:true})
-                }, 2000);          
+        setTimeout(() => {
+            res.redirect("/login")
+        }, 2000);                         
         } catch (error) {
             console.log(error);
 }
